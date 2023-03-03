@@ -41,13 +41,20 @@ class Log:
         return self.logger
 
 
-class HandleResults:
+class HandleFiles:
 
     def __init__(self):
         self.new_results_folder_path = None
-        self.results_path = os.path.dirname(__file__) + '/../results/'
+        self.file_path = os.path.dirname(__file__)
+        self.results_path = self.file_path + '/../results/'
         if not os.path.exists(Path(self.results_path)):
             os.mkdir(Path(self.results_path))
+
+    def get_target_file_path(self, folder, file) -> Union[str, bool]:
+
+        if os.path.exists(Path(self.file_path + '/../dss/' + folder + '/' + file)):
+            return str(Path(self.file_path + '/../dss/' + folder + '/' + file))
+        return False
 
     def set_folder_in_results(self, new_folder: str) -> None:
         self.new_results_folder_path = self.results_path + new_folder
