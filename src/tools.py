@@ -3,6 +3,7 @@ import logging.handlers
 import os
 import sys
 from pathlib import Path
+from typing import Union
 
 
 class Log:
@@ -38,3 +39,45 @@ class Log:
         self.logger.setLevel(logging.DEBUG)
 
         return self.logger
+
+
+class HandleResults:
+
+    def __init__(self):
+        self.new_results_folder_path = None
+        self.results_path = os.path.dirname(__file__) + '/../results/'
+        if not os.path.exists(Path(self.results_path)):
+            os.mkdir(Path(self.results_path))
+
+    def set_folder_in_results(self, new_folder: str) -> None:
+        self.new_results_folder_path = self.results_path + new_folder
+
+        if os.path.exists(Path(self.new_results_folder_path)):
+            return
+
+        os.mkdir(Path(self.results_path + new_folder))
+
+    def get_folder_path_in_results(self) -> str:
+        return str(Path(self.new_results_folder_path))
+
+    def remove_results_folder_content(self) -> None:
+
+        files = os.listdir(self.new_results_folder_path)
+
+        for file in files:
+            file_path = os.path.join(self.new_results_folder_path, file)
+            os.remove(file_path)
+
+    def remove_file(self, file_name: str) -> bool:
+        try:
+            os.remove(Path(self.new_results_folder_path + '/' + file_name))
+            return True
+        except FileNotFoundError:
+            return False
+
+    def remove_folder(self) -> bool:
+        try:
+            os.rmdir(Path(self.new_results_folder_path))
+            return True
+        except FileNotFoundError:
+            return False

@@ -5,6 +5,7 @@ from pathlib import Path
 
 class Plotter:
     def __init__(self):
+        self.plt = plt
         self.x = None
         self.y = None
         self.title = None
@@ -32,11 +33,11 @@ class Plotter:
         self.axis_name_y = y_name
 
     def perform_plot(self):
-        plt.plot(self.target_file[self.x], self.target_file[self.y])
-        plt.title(self.title)
-        plt.xlabel(self.x)
-        plt.ylabel(self.y)
-        plt.show()
+        self.plt.plot(self.target_file[self.x], self.target_file[self.y])
+        self.plt.title(self.title)
+        self.plt.xlabel(self.x)
+        self.plt.ylabel(self.y)
+        self.plt.show()
 
 
 if __name__ == '__main__':
