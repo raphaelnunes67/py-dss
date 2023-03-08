@@ -10,7 +10,8 @@ class Log:
     dir_path = Path(os.path.dirname(__file__) + "/../logs")
 
     def __init__(self, logs_path=dir_path):
-        self.logger = None
+        self.logger = ''
+        self.target_folder_path = None
         self.logs_path = Path(logs_path)
         if not os.path.exists(self.logs_path):
             os.makedirs(self.logs_path, exist_ok=True)
@@ -44,6 +45,7 @@ class Log:
 class HandleFiles:
 
     def __init__(self):
+        self.target_folder_path = None
         self.new_results_folder_path = None
         self.file_path = os.path.dirname(__file__)
         self.results_path = self.file_path + '/../results/'
@@ -53,8 +55,13 @@ class HandleFiles:
     def get_target_file_path(self, folder, file) -> Union[str, bool]:
 
         if os.path.exists(Path(self.file_path + '/../dss/' + folder + '/' + file)):
-            return str(Path(self.file_path + '/../dss/' + folder + '/' + file))
+            self.target_folder_path = self.file_path + '/../dss/' + folder
+            return str(Path(self.target_folder_path + '/' + file))
         return False
+
+    def get_target_folder_path(self) -> str:
+
+        return str(self.target_folder_path)
 
     def set_folder_in_results(self, new_folder: str) -> None:
         self.new_results_folder_path = self.results_path + new_folder

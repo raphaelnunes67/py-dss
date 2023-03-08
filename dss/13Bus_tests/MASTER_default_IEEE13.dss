@@ -1,0 +1,58 @@
+Clear
+
+// Circuit Description
+
+Redirect substation.dss  
+Redirect linecodes.dss
+Redirect lines.dss
+Redirect loadshape.dss
+Redirect loads.dss
+Redirect capacitors.dss
+Redirect transformer_sub.dss
+Redirect transformer.dss
+Redirect regulators.dss
+Redirect switches.dss
+
+
+!Redirect pvsystemexample.dss
+!Redirect volt_var_pv.dss
+
+
+!Redirect storage_power.dss
+
+!Redirect voltage_base.dss
+
+!Redirect monitor_sub.dss
+!Redirect monitor_wind.dss
+!Redirect monitor_pv.dss
+!Redirect monitor_storage.dss
+
+
+!Redirect solve_daily.dss
+
+!Transformer.RegFaseA.Taps=[1.0 1.0]
+!Transformer.RegFaseB.Taps=[1.0 1.0]
+!Transformer.RegFaseC.Taps=[1.0 1.0]
+!Set Controlmode=OFF
+
+!solve  maxcontrol=100
+
+!set controlmode=static
+!set mode=daily stepsize=1.0h number=21
+!set mode=daily stepsize=1.0h number=45
+
+
+!solve
+
+
+//Redirect solve_old
+!Redirect command_monitor_sub.dss
+!Redirect command_monitor_wind.dss
+!Redirect command_monitor_pv.dss
+!Redirect command_monitor_storage.dss
+
+
+!export profile
+
+
+!plot profile phases

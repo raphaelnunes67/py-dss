@@ -1,9 +1,9 @@
 import opendssdirect as dss
 
-from tools import HandleResults
+from tools import *
 
 
-results = HandleResults()
+results = HandleFiles()
 
 results.set_folder_in_results('new_folder')
 
