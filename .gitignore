@@ -162,3 +162,7 @@ cython_debug/
 # OpenDSS results files
 
 /results
+
+#editor
+
+.idea/

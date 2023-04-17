@@ -1,4 +1,4 @@
-# PyDss
+# py-dss
 
 Project developed during the master's course in electrical engineering of the postgraduate program in electrical engineering at UFAM.
 
