@@ -1,0 +1,423 @@
+Clear
+
+!----------Barramento de Entrada do Circuito--------
+
+New circuit.REDE1 
+!~ basekv=13.8 Bus1=MT1 pu=1.03 Phases=3 R1=3.63068244 X1=6.87396402 R0=4.2641 X0=11.7544
+
+~ basekv=13.8 Bus1=MT1 pu=1.015 Phases=3 MVAsc1=600e10 MVAsc3=600e10
+
+
+
+!------------------Curvas de Carga-----------------
+New LoadShape.IP10000 npts=24.000000 interval=1.000000 
+~ mult = ( 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000)
+
+new loadshape.demand2 npts=24 
+~ mult=[11.281 10.736 10.375 10.138 10.090 10.304 10.761 11.185 11.204 10.920 10.625 10.239 9.800 9.416 9.271 9.544 10.802 13.217 14.198 14.552 14.578 14.042 12.940 11.696] 
+~ action=normalize
+
+new loadshape.demand3 npts=1440 minterval=1 csvfile=dados2.csv action=normalize ! pontos aneel expandido fc=462
+
+
+!------------------Shape de recarga dos EVs-----------------
+
+New Loadshape.shapev1   npts=24 minterval=1 csvfile=dados_ve.txt
+
+
+
+!------------------Shape do gerador FV e cargas residências -----------------
+
+new loadshape.PVshape1 npts=1440 minterval=1 csvfile=pvperfis/pv_chuva.txt
+new loadshape.PVshape2 npts=1440 minterval=1 csvfile=pvperfis/pv_nubla.txt
+new loadshape.PVshape3 npts=1440 minterval=1 csvfile=pvperfis/pv_variabi.txt action=normalize
+new loadshape.PVshape4 npts=1440 minterval=1 csvfile=pvperfis/pv_van2.txt action=normalize
+!new loadshape.PVshape5 npts=1440 minterval=1 csvfile=pvperfis/pv_enso2.txt action=normalize
+new loadshape.PVshape5 npts=1440 minterval=1 csvfile=pvperfis/pv_ensolafinal3.txt action=normalize
+
+
+!------------Declaração dos Cabos--------------
+
+New wiredata.1000000 Runits=km Rac=0.306 GMRunits=m GMRac=0.0055    Radunits=m Diam=0.01431 Emergamps=365 !4/0
+New wiredata.1000001 Runits=km Rac=0.975 GMRunits=m GMRac=0.00308   Radunits=m Diam=0.00801 Emergamps=175 !2
+New wiredata.1000002 Runits=km Rac=1.551 GMRunits=m GMRac=0.00244   Radunits=m Diam=0.00636 Emergamps=130 !4
+New wiredata.1000003 Runits=km Rac=0.732 GMRunits=m GMRac=0.01395   Radunits=m Diam=0.0279  Emergamps=80   !50mm2
+New wiredata.1000004 Runits=km Rac=0.613 GMRunits=m GMRac=0.00388   Radunits=m Diam=0.01011 Emergamps=240   !1/0
+New Wiredata.1000005 Runits=km Rac=1.442 GMRunits=m GMRac=0.002334  Radunits=m Diam=0.0060  Emergamps=51  !25mm2 Fase
+New Wiredata.1000006 Runits=km Rac=1.442 GMRunits=m GMRac=0.0024118 Radunits=m Diam=0.0062  Emergamps=51  !25mm2 Neutro
+
+! Condutores nús
+
+New wiredata.1000007 Runits=km Rac=0.3165 GMRunits=m GMRac=0.00481    Radunits=m Diam=0.01326 Emergamps=328 !4/0 OXLIP NEXANS
+New wiredata.1000008 Runits=km Rac=0.6375 GMRunits=m GMRac=0.00339    Radunits=m Diam=0.00936 Emergamps=210 !1/0 POPPY NEXANS
+New wiredata.1000009 Runits=km Rac=1.0145 GMRunits=m GMRac=0.00269    Radunits=m Diam=0.00741 Emergamps=155 !2   IRIS  NEXANS
+New wiredata.1000010 Runits=km Rac=1.6119 GMRunits=m GMRac=0.00588    Radunits=m Diam=0.00588 Emergamps=116 !4   ROSE  NEXANS
+
+! Condutores Isolados
+
+New wiredata.1000011 Runits=km Rdc=0.3424 GMRunits=m Radunits=m Diam=0.01680 Emergamps=268 !120mm2 PE fase  NEXANS/Equatorial Pará
+New wiredata.1000012 Runits=km Rdc=0.5787 GMRunits=m Radunits=m Diam=0.01335 Emergamps=190 !70mm2  PE fase  NEXANS/Equatorial Pará
+New wiredata.1000013 Runits=km Rdc=0.8327 GMRunits=m Radunits=m Diam=0.01140 Emergamps=152 !50mm2  PE fase  NEXANS/Equatorial Pará
+New wiredata.1000014 Runits=km Rdc=1.1201 GMRunits=m Radunits=m Diam=0.01020 Emergamps=126 !35mm2  PE fase  NEXANS/Equatorial Pará
+New wiredata.1000015 Runits=km Rdc=1.5390 GMRunits=m Radunits=m Diam=0.00880 Emergamps=104 !25mm2  PE fase  NEXANS/Equatorial Pará
+
+!------Configuração da geometria dos condutores------
+
+New linegeometry.1-C17130402-ABCN nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000000 units=m x=0 h=8.8
+~ cond=2.000000 wire=1000000 units=m x=0 h=8.6
+~ cond=3.000000 wire=1000000 units=m x=0 h=8.4
+~ cond=4.000000 wire=1000001 units=m x=0 h=9
+!Reduce=Yes
+
+New linegeometry.1-C17130410-ABCN nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000000 units=m x=0 h=8.8
+~ cond=2.000000 wire=1000000 units=m x=0 h=8.6
+~ cond=3.000000 wire=1000000 units=m x=0 h=8.4
+~ cond=4.000000 wire=1000004 units=m x=0 h=9
+!Reduce=Yes
+
+New linegeometry.2-C17130402-ABCN nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000001 units=m x=0 h=8.8
+~ cond=2.000000 wire=1000001 units=m x=0 h=8.6
+~ cond=3.000000 wire=1000001 units=m x=0 h=8.4
+~ cond=4.000000 wire=1000002 units=m x=0 h=9
+!Reduce=Yes
+
+New linegeometry.1-C17130401-ABCN nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000000 units=m x=0 h=8.8
+~ cond=2.000000 wire=1000000 units=m x=0 h=8.6
+~ cond=3.000000 wire=1000000 units=m x=0 h=8.4
+~ cond=4.000000 wire=1000001 units=m x=0 h=9
+!Reduce=Yes
+
+New linegeometry.RAMAL nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000003 units=m x=0 h=5.8
+~ cond=2.000000 wire=1000003 units=m x=0 h=5.6
+~ cond=3.000000 wire=1000003 units=m x=0 h=5.4
+~ cond=4.000000 wire=1000003 units=m x=0 h=6
+Reduce=Yes
+
+New linegeometry.RAMAL2 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000005 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000005 units=m x=0 h=6.01
+~ cond=3.000000 wire=1000005 units=m x=0 h=6.02
+~ cond=4.000000 wire=1000006 units=m x=0 h=6.03
+Reduce=Yes
+
+
+! Geometria para condutores NUS
+
+
+New linegeometry.OXLIP nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000007 units=m x=0 h=6.5
+~ cond=2.000000 wire=1000007 units=m x=0 h=6.7
+~ cond=3.000000 wire=1000007 units=m x=0 h=6.9
+~ cond=4.000000 wire=1000007 units=m x=0 h=7.1
+!Reduce=Yes
+
+New linegeometry.POPPY nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000008 units=m x=0 h=6.5
+~ cond=2.000000 wire=1000008 units=m x=0 h=6.7
+~ cond=3.000000 wire=1000008 units=m x=0 h=6.9
+~ cond=4.000000 wire=1000008 units=m x=0 h=7.1
+!Reduce=Yes
+
+New linegeometry.IRIS nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000009 units=m x=0 h=6.5
+~ cond=2.000000 wire=1000009 units=m x=0 h=6.7
+~ cond=3.000000 wire=1000009 units=m x=0 h=6.9
+~ cond=4.000000 wire=1000009 units=m x=0 h=7.1
+!Reduce=Yes
+
+New linegeometry.ROSE nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000010 units=m x=0 h=6.5
+~ cond=2.000000 wire=1000010 units=m x=0 h=6.7
+~ cond=3.000000 wire=1000010 units=m x=0 h=6.9
+~ cond=4.000000 wire=1000010 units=m x=0 h=7.1
+!Reduce=Yes
+
+
+!Geometria para condutores isolados
+
+New linegeometry.QUAD-120 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000011 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000011 units=m x=0 h=6.05
+~ cond=3.000000 wire=1000011 units=m x=0 h=6.10
+~ cond=4.000000 wire=1000012 units=m x=0 h=6.15
+Reduce=Yes
+
+New linegeometry.QUAD-70 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000012 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000012 units=m x=0 h=6.05
+~ cond=3.000000 wire=1000012 units=m x=0 h=6.10
+~ cond=4.000000 wire=1000012 units=m x=0 h=6.15
+Reduce=Yes
+
+New linegeometry.QUAD-50 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000013 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000013 units=m x=0 h=6.05
+~ cond=3.000000 wire=1000013 units=m x=0 h=6.10
+~ cond=4.000000 wire=1000013 units=m x=0 h=6.15
+Reduce=Yes
+
+New linegeometry.QUAD-35 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000014 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000014 units=m x=0 h=6.05
+~ cond=3.000000 wire=1000014 units=m x=0 h=6.10
+~ cond=4.000000 wire=1000014 units=m x=0 h=6.15
+Reduce=Yes
+
+New linegeometry.QUAD-25 nconds=4.000000 nphases=3.000000
+~ cond=1.000000 wire=1000015 units=m x=0 h=6.00
+~ cond=2.000000 wire=1000015 units=m x=0 h=6.05
+~ cond=3.000000 wire=1000015 units=m x=0 h=6.10
+~ cond=4.000000 wire=1000015 units=m x=0 h=6.15
+Reduce=Yes
+
+!---------------Linhas---------------
+
+New line.1743000 Geometry=QUAD-120 Length=0.0280886 Units=km Bus1=C17130410 Bus2=C17130412
+
+New line.1743001 Geometry=QUAD-120 Length=0.0251075 Units=km Bus1=C17130412 Bus2=C17130414
+
+New line.1743002 Geometry=QUAD-120 Length=0.0304473 Units=km Bus1=C17130410 Bus2=C17130411
+
+New line.1743003 Geometry=QUAD-120 Length=0.0309757 Units=km Bus1=C17130411 Bus2=C17130413
+
+New line.1743004 Geometry=QUAD-120 Length=0.0307074 Units=km Bus1=C17130413 Bus2=C17130409
+
+New line.1743005 Geometry=QUAD-70 Length=0.0306332 Units=km Bus1=C17130409 Bus2=C17130408
+
+New line.1743006 Geometry=QUAD-70 Length=0.0284971 Units=km Bus1=C17130408 Bus2=C17130407
+
+New line.1743007 Geometry=QUAD-70 Length=0.0230639 Units=km Bus1=C17130407 Bus2=C29405754
+
+New line.1743008 Geometry=QUAD-70 Length=0.0282982 Units=km Bus1=C17130407 Bus2=C17130405
+
+New line.1743009 Geometry=QUAD-70 Length=0.0293106 Units=km Bus1=C17130405 Bus2=C17130404
+
+New line.1743010 Geometry=QUAD-70 Length=0.0300080 Units=km Bus1=C17130404 Bus2=C17130403
+
+New line.1743011 Geometry=QUAD-70 Length=0.0253710 Units=km Bus1=C17130410 Bus2=C00644008
+
+New line.1743012 Geometry=QUAD-70 Length=0.0242970 Units=km Bus1=C00644008 Bus2=C00644007
+
+New line.1743013 Geometry=QUAD-70 Length=0.0250950 Units=km Bus1=C00644007 Bus2=C00590095
+
+New line.1743014 Geometry=QUAD-70 Length=0.0309424 Units=km Bus1=C00644008 Bus2=C00644009
+
+New line.1743015 Geometry=QUAD-70 Length=0.0304030 Units=km Bus1=C00644009 Bus2=C00644010
+
+New line.1743016 Geometry=QUAD-70 Length=0.0301085 Units=km Bus1=C00644010 Bus2=C00644011
+
+New line.1743017 Geometry=QUAD-70 Length=0.0309876 Units=km Bus1=C00644011 Bus2=C00644013
+
+New line.1743018 Geometry=QUAD-70 Length=0.0279342 Units=km Bus1=C00644013 Bus2=C00644014
+
+New line.1743019 Geometry=QUAD-70 Length=0.0250677 Units=km Bus1=C00644014 Bus2=C00644015
+
+New line.1743020 Geometry=QUAD-70 Length=0.0226456 Units=km Bus1=C00644013 Bus2=C00644012
+
+New line.1743021 Geometry=QUAD-70 Length=0.0212366 Units=km Bus1=C00644012 Bus2=C17130648
+
+New line.1743022 Geometry=RAMAL2 Length=0.00770 Units=km Bus1=C29405754 Bus2=CA746GR
+
+New line.1743023 Geometry=RAMAL2 Length=0.01572 Units=km Bus1=C17130410 Bus2=CA746RES1
+
+New line.1743024 Geometry=RAMAL2 Length=0.01196 Units=km Bus1=C17130410 Bus2=CA746RES2
+
+New line.1743025 Geometry=RAMAL2 Length=0.01259 Units=km Bus1=C17130412 Bus2=CA746RES3
+
+New line.1743026 Geometry=RAMAL2 Length=0.01489 Units=km Bus1=C17130412 Bus2=CA746RES4
+
+New line.1743027 Geometry=RAMAL2 Length=0.01232 Units=km Bus1=C17130414 Bus2=CA746RES5
+
+New line.1743028 Geometry=RAMAL2 Length=0.01162 Units=km Bus1=C17130414 Bus2=CA746RES6
+
+New line.1743029 Geometry=RAMAL2 Length=0.01458 Units=km Bus1=C17130411 Bus2=CA746RES7
+
+New line.1743030 Geometry=RAMAL2 Length=0.01189 Units=km Bus1=C17130411 Bus2=CA746RES8
+
+New line.1743031 Geometry=RAMAL2 Length=0.01549 Units=km Bus1=C17130413 Bus2=CA746RES9
+
+New line.1743032 Geometry=RAMAL2 Length=0.01268 Units=km Bus1=C17130413 Bus2=CA746RES10
+
+New line.1743033 Geometry=RAMAL2 Length=0.01248 Units=km Bus1=C17130409 Bus2=CA746RES11
+
+New line.1743034 Geometry=RAMAL2 Length=0.01542 Units=km Bus1=C17130409 Bus2=CA746RES12
+
+New line.1743035 Geometry=RAMAL2 Length=0.01281 Units=km Bus1=C17130408 Bus2=CA746RES13
+
+New line.1743036 Geometry=RAMAL2 Length=0.01097 Units=km Bus1=C17130404 Bus2=CA746RES14
+
+New line.1743037 Geometry=RAMAL2 Length=0.00360 Units=km Bus1=C00644008 Bus2=CA746RES15
+
+New line.1743038 Geometry=RAMAL2 Length=0.00836 Units=km Bus1=C00644007 Bus2=CA746RES16
+
+New line.1743039 Geometry=RAMAL2 Length=0.00818 Units=km Bus1=C00590095 Bus2=CA746RES17
+
+New line.1743040 Geometry=RAMAL2 Length=0.01000 Units=km Bus1=C00644009 Bus2=CA746RES18
+
+New line.1743041 Geometry=RAMAL2 Length=0.00835 Units=km Bus1=C00644010 Bus2=CA746RES19
+
+New line.1743042 Geometry=RAMAL2 Length=0.01137 Units=km Bus1=C00644010 Bus2=CA746RES20
+
+New line.1743043 Geometry=RAMAL2 Length=0.01013 Units=km Bus1=C00644010 Bus2=CA746RES21
+
+New line.1743044 Geometry=RAMAL2 Length=0.00299 Units=km Bus1=C00644011 Bus2=CA746RES22
+
+New line.1743045 Geometry=RAMAL2 Length=0.01040 Units=km Bus1=C00644011 Bus2=CA746RES23
+
+New line.1743046 Geometry=RAMAL2 Length=0.01560 Units=km Bus1=C00644013 Bus2=CA746RES24
+
+New line.1743047 Geometry=RAMAL2 Length=0.01552 Units=km Bus1=C00644013 Bus2=CA746RES25
+
+New line.1743048 Geometry=RAMAL2 Length=0.01270 Units=km Bus1=C00644014 Bus2=CA746RES26
+
+
+!--------------Transformadores Trifásicos--------------
+
+!!!!! ESSE AQUI New transformer.CA746 phases=3 Windings=2 XHL=3.64500 %loadloss=1.5200 %noloadloss=0.440 %imag=3.200000 %R=1.647 !75kVA
+!New transformer.CA746 phases=3 Windings=2 XHL=3.750000 %loadloss=0.360000 %noloadloss=0.300000 %imag=2.600000 %R=4.000000 !150kVA
+!~ wdg=1.000000 bus=MT1.1.2.3 conn=delta kV=13.800000 kVa=75.0
+!~ wdg=2.000000 bus=C17130410.1.2.3.0 conn=wye kV=0.220000 kVa=75.0
+
+
+! TRAFO DE 75KVA Pvazio=260W, Ptot=1260W, Z=3,5%
+New Transformer.CA746	phases=3	windings=2	xhl=3.070439708 taps=[ 1.0 1.0 ] ! 1.00/0.9565217391/0.9130434783- 1.043478261/1.086956522
+~ wdg=1 bus=MT1.1.2.3	conn=delta	kV=13.80	kVA=75 %r=0.84
+~ wdg=2 bus=C17130410.1.2.3.0		conn=wye	kV=0.220	kVA=75 %r=0.84
+!---------------MFCR---------------
+
+// New generator.PV1   bus1=CA746RES1.2.3   phases=1 kV=(0.220) kW=1 pf=1 model=1 status=variable daily=PVshape
+
+
+
+!------------------Cargas-----------------
+
+!carga de iluminação pública
+
+New load.IP1   phases=1 bus1=C17130410.1.2 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP2   phases=1 bus1=C17130412.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP3   phases=1 bus1=C17130414.3.1 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP4   phases=1 bus1=C17130411.1.2 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP5   phases=1 bus1=C17130413.1.2 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP6   phases=1 bus1=C17130409.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP7   phases=1 bus1=C17130408.3.1 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP8   phases=1 bus1=C17130407.3.1 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP9   phases=1 bus1=C29405754.1.2 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP10  phases=1 bus1=C17130405.1.2 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP11  phases=1 bus1=C17130404.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP12  phases=1 bus1=C17130403.3.1 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP13  phases=1 bus1=C00644008.1.2 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP14  phases=1 bus1=C00644007.2.3 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP15  phases=1 bus1=C00590095.3.1 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP16  phases=1 bus1=C00644009.1.2 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP17  phases=1 bus1=C00644010.2.3 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP18  phases=1 bus1=C00644011.3.1 kv=0.22 kw=0.25 pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP19  phases=1 bus1=C00644013.1.2 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP20  phases=1 bus1=C00644014.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP21  phases=1 bus1=C00644015.3.1 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP22  phases=1 bus1=C00644012.1.2 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+New load.IP23  phases=1 bus1=C17130648.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta status=variable daily=IP10000
+
+
+!carga residencial
+
+new load.carga1   phases=3 bus1=CA746RES1   kV=0.220  kW=2.0     pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga2   phases=3 bus1=CA746RES2   kV=0.220  kW=5.524   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga3   phases=3 bus1=CA746RES3   kV=0.220  kW=6.304   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga4   phases=3 bus1=CA746RES4   kV=0.220  kW=2.2498  pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga5   phases=3 bus1=CA746RES5   kV=0.220  kW=4.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga6   phases=3 bus1=CA746RES6   kV=0.220  kW=3.377   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga7   phases=3 bus1=CA746RES7   kV=0.220  kW=1.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga8   phases=3 bus1=CA746RES8   kV=0.220  kW=3.025   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga9   phases=3 bus1=CA746RES9   kV=0.220  kW=2.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga10  phases=3 bus1=CA746RES10  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga11  phases=3 bus1=CA746RES11  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga12  phases=3 bus1=CA746RES12  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga13  phases=3 bus1=CA746RES13  kV=0.220  kW=3.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga14  phases=3 bus1=CA746RES14  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga15  phases=3 bus1=CA746RES15  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga16  phases=3 bus1=CA746RES16  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga17  phases=3 bus1=CA746RES17  kV=0.220  kW=7.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga18  phases=3 bus1=CA746RES18  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga19  phases=3 bus1=CA746RES19  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga20  phases=3 bus1=CA746RES20  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga21  phases=3 bus1=CA746RES21  kV=0.220  kW=3.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga22  phases=3 bus1=CA746RES22  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga23  phases=3 bus1=CA746RES23  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga24  phases=3 bus1=CA746RES24  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga25  phases=3 bus1=CA746RES25  kV=0.220  kW=2.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga26  phases=3 bus1=CA746RES26  kV=0.220  kW=2.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+
+new load.cargagr  phases=3 bus1=CA746GR     kv=0.220  kw=0.500   pf=0.92 model=1 conn=wye status=variable daily=demand3
+
+
+!carga veículo elétrico
+!new load.ev1   phases=1 bus1=CA746RES26.2 kV=0.220  kW=3.6 pf=0.95 model=1 conn=delta status=variable daily=shapev1
+
+!gera��o PV
+
+!New generator.PV1   bus1=CA746RES1.2  phases=1 kV=(0.220) kW=1 pf=1 model=1 status=variable daily=PVshape5
+
+
+!------------------Medições-----------------
+
+new energymeter.busbar element=transformer.CA746   terminal=1
+new monitor.trafop           element=transformer.CA746    terminal=1   mode=1  ppolar=yes
+new monitor.trafop2           element=transformer.CA746    terminal=1   mode=1  ppolar=no
+new monitor.trafo_v       element=transformer.CA746     terminal=2   mode=0 ppolar=no
+
+
+!new monitor.carga1 element=load.carga1 terminal=1 mode=0
+!new monitor.carga2 element=load.carga2 terminal=1 mode=0
+!new monitor.carga3 element=load.carga3 terminal=1 mode=0
+!new monitor.carga4 element=load.carga4 terminal=1 mode=0
+!new monitor.carga5 element=load.carga5 terminal=1 mode=0
+!new monitor.carga6 element=load.carga6 terminal=1 mode=0
+!new monitor.carga7 element=load.carga7 terminal=1 mode=0
+!new monitor.carga8 element=load.carga8 terminal=1 mode=0
+!new monitor.carga9 element=load.carga9 terminal=1 mode=0
+!new monitor.carga10 element=load.carga10 terminal=1 mode=0
+!new monitor.carga11 element=load.carga11 terminal=1 mode=0
+!new monitor.carga12 element=load.carga12 terminal=1 mode=0
+!new monitor.carga13 element=load.carga13 terminal=1 mode=0
+!new monitor.carga14 element=load.carga14 terminal=1 mode=0
+!new monitor.carga15 element=load.carga15 terminal=1 mode=0
+!new monitor.carga16 element=load.carga16 terminal=1 mode=0
+!new monitor.carga17 element=load.carga17 terminal=1 mode=0
+!new monitor.carga18 element=load.carga18 terminal=1 mode=0
+!new monitor.carga19 element=load.carga19 terminal=1 mode=0
+!new monitor.carga20 element=load.carga20 terminal=1 mode=0
+!new monitor.carga21 element=load.carga21 terminal=1 mode=0
+!new monitor.carga22 element=load.carga22 terminal=1 mode=0
+!new monitor.carga23 element=load.carga23 terminal=1 mode=0
+!new monitor.carga24 element=load.carga24 terminal=1 mode=0
+!new monitor.carga25 element=load.carga25 terminal=1 mode=0
+!new monitor.carga26 element=load.carga26 terminal=1 mode=0
+
+set voltagebases=[13.8 0.220]
+calcvoltagebases
+
+set mode  = daily
+set stepsize = 1h
+set number = 24
+
+batchedit load..* vminpu=0.3
+
+solve
+
+!------------- Plots----------------------------
+
+!export monitors carga1
+!plot monitor object=carga1 channels=(1 3 5) bases = [127 127 127]
+
+!export monitors carga14
+!plot monitor object=carga14 channels=(1 3 5) bases = [127 127 127]
+
+!export monitors carga26
+!plot monitor object=carga26 channels=(1 3 5) bases = [127 127 127]
+
+

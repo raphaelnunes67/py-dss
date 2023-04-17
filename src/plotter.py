@@ -16,6 +16,7 @@ class Plotter:
         self.labels = dict()
 
     def set_file(self, file: str):
+        self.target_file_path = Path(file)
         self.target_file = pd.read_csv(Path(file))
 
     def set_axis(self, **kwargs):
@@ -34,9 +35,9 @@ class Plotter:
         self.axis_name_x = x_name
         self.axis_name_y = y_name
 
-    def perform_plot(self):
+    def perform_plot(self, bases: int = 1):
         for value, label in zip(self.y_values, list(self.labels.values())):
-            self.plt.plot(self.x_values, value, label=label)
+            self.plt.plot(self.x_values, value / bases, label=label)
 
     def show_plot(self, show_legend=True):
         self.plt.title(self.title)
@@ -46,12 +47,23 @@ class Plotter:
             self.plt.legend(loc="upper left")
         self.plt.show()
 
+    def get_min_value(self, column_name: str) -> int:
+        df = pd.read_csv(str(self.target_file_path))
+        min_value = df[column_name].min()
+
+        return min_value
+
+    def get_max_value(self, column_name: str) -> int:
+        df = pd.read_csv(str(self.target_file_path))
+        max_value = df[column_name].max()
+
+        return max_value
+
     def __del__(self):
         pass
 
 
 if __name__ == '__main__':
-
     plotter = Plotter()
 
     plotter.set_file('../dss/13Bus_tests/IEEE13BARRAS_Mon_subestacaop_1.csv')
