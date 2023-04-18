@@ -171,12 +171,12 @@ if __name__ == '__main__':
 
     #execute_ckt_case_study(logger, target_file, folder, percentage=60, volt_var_control=False)
     # execute_ckt_case_study(logger, target_file, folder, percentage=80, volt_var_control=False)
-    # execute_ckt_case_study(logger, target_file, folder, percentage=100, volt_var_control=False)
+    execute_ckt_case_study(logger, target_file, folder, percentage=100, volt_var_control=False)
 
     # execute_ckt_case_study(logger, target_file, folder, percentage=20, volt_var_control=True)
     # execute_ckt_case_study(logger, target_file, folder, percentage=40, volt_var_control=True)
     # execute_ckt_case_study(logger, target_file, folder, percentage=60, volt_var_control=True)
     # execute_ckt_case_study(logger, target_file, folder, percentage=80, volt_var_control=True)
-    execute_ckt_case_study(logger, target_file, folder, percentage=100, volt_var_control=True)
+    # execute_ckt_case_study(logger, target_file, folder, percentage=100, volt_var_control=True)
 
 
