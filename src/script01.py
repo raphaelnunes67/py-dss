@@ -37,8 +37,8 @@ def execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_c
     dss.Text.Command('set voltagebases=[13.8 0.220]')
     dss.Text.Command('calcvoltagebases')
     dss.Text.Command('set mode=daily')
-    dss.Text.Command('set stepsize=1h')
-    dss.Text.Command('set number=24')
+    dss.Text.Command('set stepsize=1m')
+    dss.Text.Command('set number=1440')
     # dss.Text.Command('batchedit load..* vminpu=0.3')
     dss.Text.Command('solve')
 
@@ -47,13 +47,13 @@ def execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_c
     dss.Text.Command('export monitors carga17')
     dss.Text.Command('export monitors carga26')
 
-
     plotter_load_1 = Plotter()
     plotter_load_1.set_file(f'{folder}/REDE1_Mon_carga1_1.csv')
     plotter_load_1.set_axis(x='hour', y1='V1', y2='V2', y3='V3')
     plotter_load_1.set_labels(l1='V1(pu)', l2='V2(pu)', l3='V3(pu)')
     plotter_load_1.set_axis_name(x_name='Time (h)', y_name='Tension (pu)')
     plotter_load_1.set_title(f'Load 1 - Percentage VE and PV: {percentage}% - VoltVar: {volt_var_control}')
+    # plotter_load_1.handle_csv_time()
     plotter_load_1.perform_plot(bases=127)
     plotter_load_1.show_plot(show_legend=True)
 
@@ -80,6 +80,7 @@ def execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_c
     plotter_load_14.set_labels(l1='V1(pu)', l2='V2(pu)', l3='V3(pu)')
     plotter_load_14.set_axis_name(x_name='Time (h)', y_name='Tension (pu)')
     plotter_load_14.set_title(f'Load 14 - Percentage VE and PV: {percentage}% - VoltVar: {volt_var_control}')
+    plotter_load_14.handle_csv_time()
     plotter_load_14.perform_plot(bases=127)
     plotter_load_14.show_plot(show_legend=True)
 
@@ -106,6 +107,7 @@ def execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_c
     plotter_load_17.set_labels(l1='V1(pu)', l2='V2(pu)', l3='V3(pu)')
     plotter_load_17.set_axis_name(x_name='Time (h)', y_name='Tension (pu)')
     plotter_load_17.set_title(f'Load 17 - Percentage VE and PV: {percentage}% - VoltVar: {volt_var_control}')
+    plotter_load_17.handle_csv_time()
     plotter_load_17.perform_plot(bases=127)
     plotter_load_17.show_plot(show_legend=True)
 
@@ -132,6 +134,7 @@ def execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_c
     plotter_load_26.set_labels(l1='V1(pu)', l2='V2(pu)', l3='V3(pu)')
     plotter_load_26.set_axis_name(x_name='Time (h)', y_name='Tension (pu)')
     plotter_load_26.set_title(f'Load 26 - Percentage VE and PV: {percentage}% - VoltVar: {volt_var_control}')
+    plotter_load_26.handle_csv_time()
     plotter_load_26.perform_plot(bases=127)
     plotter_load_26.show_plot(show_legend=True)
 
@@ -171,7 +174,7 @@ if __name__ == '__main__':
 
     #execute_ckt_case_study(logger, target_file, folder, percentage=60, volt_var_control=False)
     # execute_ckt_case_study(logger, target_file, folder, percentage=80, volt_var_control=False)
-    execute_ckt_case_study(logger, target_file, folder, percentage=100, volt_var_control=False)
+    execute_ckt_case_study(logger, target_file, folder, percentage=0, volt_var_control=False)
 
     # execute_ckt_case_study(logger, target_file, folder, percentage=20, volt_var_control=True)
     # execute_ckt_case_study(logger, target_file, folder, percentage=40, volt_var_control=True)

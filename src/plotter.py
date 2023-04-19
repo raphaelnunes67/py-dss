@@ -19,9 +19,13 @@ class Plotter:
         self.target_file_path = Path(file)
         self.target_file = pd.read_csv(Path(file))
 
+    def handle_csv_time(self):
+        pd.options.mode.chained_assignment = None
+        self.target_file['hour'][1:] = self.target_file['hour'][1:] + self.target_file['t(sec)'][1:] / 3600
+        self.target_file.to_csv(self.target_file_path, index=False)
+
     def set_axis(self, **kwargs):
         self.x_values = self.target_file[kwargs.get('x')]
-
         for value in list(kwargs.values())[1:]:
             self.y_values.append(self.target_file[value])
 
