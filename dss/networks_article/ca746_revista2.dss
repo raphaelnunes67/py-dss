@@ -7,6 +7,7 @@ New circuit.REDE1
 
 ~ basekv=13.8 Bus1=MT1 pu=1.015 Phases=3 MVAsc1=600e10 MVAsc3=600e10
 
+set maxcontroliter=100000
 
 
 !------------------Curvas de Carga-----------------
@@ -20,14 +21,17 @@ new loadshape.demand2 npts=24
 new loadshape.demand3 npts=1440 minterval=1 csvfile=dados2.csv action=normalize ! pontos aneel expandido fc=462
 
 
-!------------------Shape de recarga dos EVs-----------------
+!--------------------shape EV battery
+new Loadshape.battery npts=1440 minterval=1 mult=(file=battery.txt)
 
-new Loadshape.shapev1   npts=1440 minterval=1 csvfile=dados_ve.txt
+!------------------Shape de recarga dos EVs------------------------
+
+!new Loadshape.shapev1   npts=1440 minterval=1
+!~ mult=(file=ev_shapes.csv, col=1)
 
 !-------------------- Curva VoltVar --------------------------------
 
 new Xycurve.vv_curve npts=6 Xarray=[0.5 0.88 0.99 1.01 1.1 1.5] Yarray=[1 1 0 0 -1 -1]
-
 
 !------------------Shape do gerador FV e cargas residências -----------------
 
@@ -328,32 +332,32 @@ New load.IP23  phases=1 bus1=C17130648.2.3 kv=0.22 kw=0.5  pf=0.92 conn=delta st
 
 !carga residencial
 
-new load.carga1   phases=3 bus1=CA746RES1   kV=0.220  kW=2.0     pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga2   phases=3 bus1=CA746RES2   kV=0.220  kW=5.524   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga3   phases=3 bus1=CA746RES3   kV=0.220  kW=6.304   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga1   phases=3 bus1=CA746RES1   kV=0.220  kW=2.500     pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga2   phases=3 bus1=CA746RES2   kV=0.220  kW=3.524   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga3   phases=3 bus1=CA746RES3   kV=0.220  kW=2.304   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga4   phases=3 bus1=CA746RES4   kV=0.220  kW=2.2498  pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga5   phases=3 bus1=CA746RES5   kV=0.220  kW=4.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga6   phases=3 bus1=CA746RES6   kV=0.220  kW=3.377   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga7   phases=3 bus1=CA746RES7   kV=0.220  kW=1.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga5   phases=3 bus1=CA746RES5   kV=0.220  kW=2.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga6   phases=3 bus1=CA746RES6   kV=0.220  kW=2.377   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga7   phases=3 bus1=CA746RES7   kV=0.220  kW=2.100   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga8   phases=3 bus1=CA746RES8   kV=0.220  kW=3.025   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga9   phases=3 bus1=CA746RES9   kV=0.220  kW=2.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga9   phases=3 bus1=CA746RES9   kV=0.220  kW=3.635   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga10  phases=3 bus1=CA746RES10  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga11  phases=3 bus1=CA746RES11  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga11  phases=3 bus1=CA746RES11  kV=0.220  kW=2.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga12  phases=3 bus1=CA746RES12  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga13  phases=3 bus1=CA746RES13  kV=0.220  kW=3.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga14  phases=3 bus1=CA746RES14  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga15  phases=3 bus1=CA746RES15  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga16  phases=3 bus1=CA746RES16  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga17  phases=3 bus1=CA746RES17  kV=0.220  kW=7.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga13  phases=3 bus1=CA746RES13  kV=0.220  kW=2.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga14  phases=3 bus1=CA746RES14  kV=0.220  kW=2.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga15  phases=3 bus1=CA746RES15  kV=0.220  kW=2.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga16  phases=3 bus1=CA746RES16  kV=0.220  kW=2.300   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga17  phases=3 bus1=CA746RES17  kV=0.220  kW=2.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga18  phases=3 bus1=CA746RES18  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga19  phases=3 bus1=CA746RES19  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga19  phases=3 bus1=CA746RES19  kV=0.220  kW=2.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga20  phases=3 bus1=CA746RES20  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga21  phases=3 bus1=CA746RES21  kV=0.220  kW=3.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga22  phases=3 bus1=CA746RES22  kV=0.220  kW=3.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga23  phases=3 bus1=CA746RES23  kV=0.220  kW=3.875   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga24  phases=3 bus1=CA746RES24  kV=0.220  kW=2.000   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga24  phases=3 bus1=CA746RES24  kV=0.220  kW=2.800   pf=0.92 model=1 conn=wye status=variable daily=demand3
 new load.carga25  phases=3 bus1=CA746RES25  kV=0.220  kW=2.620   pf=0.92 model=1 conn=wye status=variable daily=demand3
-new load.carga26  phases=3 bus1=CA746RES26  kV=0.220  kW=2.726   pf=0.92 model=1 conn=wye status=variable daily=demand3
+new load.carga26  phases=3 bus1=CA746RES26  kV=0.220  kW=2.200   pf=0.92 model=1 conn=wye status=variable daily=demand3
 
 new load.cargagr  phases=3 bus1=CA746GR     kv=0.220  kw=0.500   pf=0.92 model=1 conn=wye status=variable daily=demand3
 

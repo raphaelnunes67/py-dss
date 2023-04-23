@@ -1,3 +1,4 @@
+import os.path
 import matplotlib.pyplot as plt
 import pandas as pd
 from pathlib import Path
@@ -17,6 +18,7 @@ class Plotter:
 
     def set_file(self, file: str):
         self.target_file_path = Path(file)
+        self.target_file_path_folder =str(Path(str(self.target_file_path) + '/../'))
         self.target_file = pd.read_csv(Path(file))
 
     def handle_csv_time(self):
@@ -39,7 +41,7 @@ class Plotter:
         self.axis_name_x = x_name
         self.axis_name_y = y_name
 
-    def perform_plot(self, bases: int = 1):
+    def perform_plot(self, bases: float = 1.00):
         for value, label in zip(self.y_values, list(self.labels.values())):
             self.plt.plot(self.x_values, value / bases, label=label)
 
@@ -50,6 +52,7 @@ class Plotter:
         if show_legend:
             self.plt.legend(loc="upper left")
         self.plt.show()
+        self.plt.close()
 
     def get_min_value(self, column_name: str) -> int:
         df = pd.read_csv(str(self.target_file_path))
@@ -63,8 +66,27 @@ class Plotter:
 
         return max_value
 
+    def save_figure(self, figure_name, dpi=300, show_legend=True):
+        self.plt.title(self.title)
+        self.plt.xlabel(self.axis_name_x)
+        self.plt.ylabel(self.axis_name_y)
+        if show_legend:
+            self.plt.legend(loc="upper left")
+        self.plt.savefig(Path(self.target_file_path_folder + figure_name), dpi=dpi)
+        self.plt.close()
+
     def __del__(self):
         pass
+
+    @staticmethod
+    def write_list_in_csv(file_name, index, values_list):
+        if os.path.exists(Path(file_name)):
+            df = pd.read_csv(Path(file_name))
+            df[index] = values_list
+        else:
+            df = pd.DataFrame({index: values_list})
+
+        df.to_csv(Path(file_name), index=False)
 
 
 if __name__ == '__main__':
