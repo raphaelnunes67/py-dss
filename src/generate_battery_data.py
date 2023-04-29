@@ -4,11 +4,11 @@ from pathlib import Path
 
 if __name__ == '__main__':
 
-    df = pd.read_csv(Path('../dss/networks_article/ev_shapes.csv'))
+    df = pd.read_csv(Path('../dss/CA746/ev_shapes.csv'))
     num_columns = df.shape[1]
 
     for i in range(num_columns):
-        df = pd.read_csv(Path('../dss/networks_article/ev_shapes.csv'))
+        df = pd.read_csv(Path('../dss/CA746/ev_shapes.csv'))
         count = 0
         values = []
 

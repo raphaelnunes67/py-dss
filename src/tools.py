@@ -61,7 +61,7 @@ class HandleFiles:
 
     def get_target_folder_path(self) -> str:
 
-        return str(self.target_folder_path)
+        return str(Path(self.target_folder_path))
 
     def set_folder_in_results(self, new_folder: str) -> None:
         self.new_results_folder_path = self.results_path + new_folder

@@ -37,6 +37,7 @@ class DrpDrc:
 
         self.drp_limit = 3 / 100
         self.drc_limit = 0.5 / 100
+        self.total_measures = 1008
 
     def calculate_from_csv(self, file_path, column_index: str) -> Tuple[float, float, float]:
 
@@ -46,11 +47,11 @@ class DrpDrc:
         nlp = 0
         nlc = 0
 
-        j = 0
-        for i in range(1008):
-            if j == 1440:
-                j = 0
-            target_voltage = voltages[j]
+        measure_time = 0
+        for measure in range(self.total_measures):
+            if measure_time == 1440:
+                measure_time = 0
+            target_voltage = voltages[measure_time]
             if (self.voltage_precarious_bottom_min <= target_voltage < self.voltage_precarious_bottom_max) \
                     or (self.voltage_precarious_top_min <= target_voltage <= self.voltage_precarious_top_max):
                 nlp = nlp + 1
@@ -58,10 +59,10 @@ class DrpDrc:
             if (target_voltage < self.voltage_critical_min) or (target_voltage > self.voltage_critical_max):
                 nlc = nlc + 1
 
-            j = j + 10
+            measure_time = measure_time + 10
 
-        drp = round((nlp / 1008) * 100, 3)
-        drc = round((nlc / 1008) * 100, 3)
+        drp = round((nlp / 1008) * 100, 4)
+        drc = round((nlc / 1008) * 100, 4)
 
         # self.logger.debug(f'Fase alvo: {column_index}')
         # self.logger.debug(f'DRP: {drp}%')
