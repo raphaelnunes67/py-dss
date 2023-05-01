@@ -1,12 +1,13 @@
 import os
 import pandas as pd
-from tools import Log, HandleFiles
 from drpdrc import DrpDrc
 from pathlib import Path
 
 
 def calculate_drp_drc_for_each_load(voltvar_folder_path):
-    ckt_drpdrc = DrpDrc()
+    df = pd.read_csv(Path(voltvar_folder_path + '/../eusd_loads.csv'), header=None)
+
+    eusd_data_list = df.iloc[:, 0].tolist()
 
     phases = ['V1', 'V2', 'V3']
 
@@ -30,11 +31,14 @@ def calculate_drp_drc_for_each_load(voltvar_folder_path):
     for folder in folders:
         folder_path = voltvar_folder + '/' + str(folder)
         files = os.listdir(Path(folder_path).resolve())
+        i = 0
         for file in files:
-            if file.find('drp_drc') == -1:
+            if file.find('drp_drc') == -1 and file.find('_voltage_') != -1:
                 sheet_content = sheet_content_default.copy()
                 comp_total = 0
+                eusd = eusd_data_list[i]
                 for phase in phases:
+                    ckt_drpdrc = DrpDrc(eusd=eusd)
                     drp, drc, comp = ckt_drpdrc.calculate_from_csv(Path(folder_path + '/' + str(file)).resolve(), phase)
                     sheet_content[f'DRP_{phase}(%)'] = [drp]
                     sheet_content[f'DRC_{phase}(%)'] = [drc]
@@ -45,11 +49,11 @@ def calculate_drp_drc_for_each_load(voltvar_folder_path):
                 df = pd.DataFrame(sheet_content)
                 df.to_excel(Path(folder_path + f'/drp_drc_{str(file)}.xlsx').resolve(), index=False)
                 sheet_content.clear()
+                i = i + 1
 
 
 def calculate_comp_total(ckt_results_folder):
-
-    for voltvar_mode_folder in ('voltvar_off',  'voltvar_on'):
+    for voltvar_mode_folder in ('voltvar_off', 'voltvar_on'):
         sheet_content_default = {
             '20%': [],
             '40%': [],
@@ -63,10 +67,11 @@ def calculate_comp_total(ckt_results_folder):
 
         for folder in folders:
             comp_total = 0
-            files = os.listdir(Path(ckt_results_folder + voltvar_mode_folder + '/' +str(folder)).resolve())
+            files = os.listdir(Path(ckt_results_folder + voltvar_mode_folder + '/' + str(folder)).resolve())
             for file in files:
                 if str(file).find('drp_drc') != -1:
-                    df = pd.read_excel(Path(ckt_results_folder + voltvar_mode_folder + '/' + str(folder) + '/' + str(file)).resolve())
+                    df = pd.read_excel(
+                        Path(ckt_results_folder + voltvar_mode_folder + '/' + str(folder) + '/' + str(file)).resolve())
                     comp_total = comp_total + df['COMP_TOTAL(R$)'][0]
 
             if str(folder).find('20') != -1:
@@ -86,10 +91,11 @@ def calculate_comp_total(ckt_results_folder):
         df = pd.DataFrame(sheet_content)
 
         if not os.path.exists(ckt_results_folder + '/comp_total.xlsx'):
-            with pd.ExcelWriter(Path(ckt_results_folder + '/comp_total.xlsx').resolve(), mode='w', if_sheet_exists='replace') as writer:
+            with pd.ExcelWriter(Path(ckt_results_folder + '/comp_total.xlsx').resolve(), mode='w') as writer:
                 df.to_excel(writer, sheet_name=voltvar_mode_folder, index=False)
         else:
-            with pd.ExcelWriter(Path(ckt_results_folder + '/comp_total.xlsx').resolve(), mode='a', if_sheet_exists='replace') as writer:
+            with pd.ExcelWriter(Path(ckt_results_folder + '/comp_total.xlsx').resolve(), mode='a',
+                                if_sheet_exists='replace') as writer:
                 df.to_excel(writer, sheet_name=voltvar_mode_folder, index=False)
 
         sheet_content.clear()

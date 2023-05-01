@@ -6,28 +6,32 @@ import csv
 import opendssdirect as dss
 from tools import *
 
+from CA744_drpdcr import *
+import openpyxl
+from time import sleep
+
 
 def execute_ckt_case_study(logger, target_file: str) -> None:
     target_loads_list = random.sample(range(1, 27), 26)  # list with random load's numbers
     ev_shapes = random.sample(list(range(1, 5000)), 26)  # select randomly a specific shape
-
-    battery_shapes = ev_shapes
-
+    # battery_shapes = ev_shapes
     percentages_list = [0, 20, 40, 60, 80, 100]
 
     logger.debug(f'Lista com ordem aleatoria para inserção das cargas: {target_loads_list}')
     logger.debug(f'Lista de indices das curvas de VE com ordem aleatória: {ev_shapes}')
 
-    voltvar = 'OFF'
+    first_write = True
     logger.debug('---- Starting LOOP -----')
-    for _ in range(2):
+
+    for voltvar in ('OFF', 'ON'):
 
         for percentage in percentages_list:
 
             if voltvar == 'ON' and percentage == 0:
+                first_write = True
                 continue
 
-            logger.debug(f'Solving for {percentage}% and VoltVar Control {voltvar}...')
+            logger.debug(f'Solving for {percentage}% and Voltvar Control {voltvar}...')
             n = round(26 * percentage / 100)
 
             dss.Text.Command('Redirect {}'.format(target_file))
@@ -39,14 +43,17 @@ def execute_ckt_case_study(logger, target_file: str) -> None:
                     dss.Text.Command(f'new Loadshape.shapev{i} npts=1440 minterval=1 '
                                      f'mult=(file=ev_shapes.csv, col={ev_shapes[i - 1]})')
 
-                    dss.Text.Command(f'new Loadshape.shapebattery{i} npts=1440 minterval=1 '
-                                     f'mult=(file=battery_shapes.csv, col={battery_shapes[i - 1]})')
+                    # dss.Text.Command(f'new Loadshape.shapebattery{i} npts=1440 minterval=1 '
+                    #                  f'mult=(file=battery_shapes.csv, col={battery_shapes[i - 1]})')
 
                     phase_a, phase_b = random.choice([(1, 2,), (2, 3), (1, 3)])
 
                     dss.Text.Command(f'new load.ev{i} phases=1 '
                                      f'bus1=CA746RES{target_loads_list[i - 1]}.{phase_a}.{phase_b} '
                                      f'kV=0.220  kW=3.6 pf=0.95 model=1 conn=delta  status=variable daily=shapev{i}')
+
+                    phase_a, phase_b = random.choice([(1, 2,), (2, 3), (1, 3)])
+
                     dss.Text.Command(f'new PVsystem.pv{i} phases=1 '
                                      f'bus1=CA746RES{target_loads_list[i - 1]}.{phase_a}.{phase_b} '
                                      f'conn=wye kV=4.16 kVA=6000 daily=PVshape5')
@@ -62,8 +69,10 @@ def execute_ckt_case_study(logger, target_file: str) -> None:
                                              ' varchangetolerance=0.1')
                             voltvar_defined = True
             for i in range(1, 27):
-                dss.Text.Command(f'new monitor.carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar} '
+                dss.Text.Command(f'new monitor.carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}_voltage '
                                  f'element=load.carga{i} terminal=1 mode=0')
+                dss.Text.Command(f'new monitor.carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}_power '
+                                 f'element=load.carga{i} terminal=1 mode=1 ppolar=no')
 
             dss.Text.Command(f'new energymeter.busbar_PV_VE_percentage_{percentage}_voltvar_{voltvar} '
                              f'element=transformer.CA746 terminal=1')
@@ -77,14 +86,20 @@ def execute_ckt_case_study(logger, target_file: str) -> None:
             dss.Solution.Solve()
 
             data = [[percentage, dss.Meters.RegisterValues()[12]]]
-            with open(f'losses_voltvar_{voltvar}.csv', 'a', newline='') as csv_file:
-                writer = csv.writer(csv_file)
-                writer.writerows(data)
+
+            if first_write:
+                with open(f'losses_voltvar_{voltvar}.csv', 'w', newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    writer.writerows(data)
+                first_write = False
+            else:
+                with open(f'losses_voltvar_{voltvar}.csv', 'a', newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    writer.writerows(data)
 
             for i in range(1, 27):
-                dss.Text.Command(f'export monitors carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}')
-
-        voltvar = 'ON'
+                dss.Text.Command(f'export monitors carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}_voltage')
+                dss.Text.Command(f'export monitors carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}_power')
 
     logger.debug('---- Simulation Done -----')
 
@@ -100,7 +115,6 @@ def create_results_folder() -> None:
 
 
 def move_files_results(_folder: str) -> None:
-
     _files = os.listdir(_folder)
 
     for file in _files:
@@ -122,10 +136,13 @@ def move_files_results(_folder: str) -> None:
                         shutil.copy(source, destination)
 
     shutil.copy(Path(_folder + '/losses_voltvar_OFF.csv').resolve(),
-                Path('../../results/CA744_results/voltvar_off').resolve())
+                Path('../../results/CA744_results/').resolve())
 
     shutil.copy(Path(_folder + '/losses_voltvar_ON.csv').resolve(),
-                Path('../../results/CA744_results/voltvar_on').resolve())
+                Path('../../results/CA744_results/').resolve())
+
+    shutil.copy(Path(_folder + '/eusd_loads.csv').resolve(),
+                Path('../../results/CA744_results/').resolve())
 
 
 if __name__ == '__main__':
@@ -139,7 +156,25 @@ if __name__ == '__main__':
     folder = files.get_target_folder_path()
 
     dss.Basic.DataPath(folder)
-
+    value = 0
     execute_ckt_case_study(logger, target_file)
     create_results_folder()
     move_files_results(folder)
+
+    # while value < 15:
+    #     execute_ckt_case_study(logger, target_file)
+    #     create_results_folder()
+    #     move_files_results(folder)
+    #
+    #     sleep(5)
+    #
+    #     calculate_drp_drc_for_each_load('../../results/CA744_results/voltvar_on')
+    #     calculate_drp_drc_for_each_load('../../results/CA744_results/voltvar_off')
+    #
+    #     calculate_comp_total('../../results/CA744_results/')
+    #
+    #     workbook = openpyxl.load_workbook(Path('../../results/CA744_results/comp_total.xlsx').resolve())
+    #     worksheet = workbook['voltvar_off']
+    #     celula = worksheet.cell(row=2, column=5)
+    #     value = celula.value
+    #     print(value)

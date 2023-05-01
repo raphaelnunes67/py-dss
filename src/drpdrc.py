@@ -56,7 +56,7 @@ class DrpDrc:
                     or (self.voltage_precarious_top_min <= target_voltage <= self.voltage_precarious_top_max):
                 nlp = nlp + 1
 
-            if (target_voltage < self.voltage_critical_min) or (target_voltage > self.voltage_critical_max):
+            elif (target_voltage < self.voltage_critical_min) or (target_voltage > self.voltage_critical_max):
                 nlc = nlc + 1
 
             measure_time = measure_time + 10
@@ -64,16 +64,12 @@ class DrpDrc:
         drp = round((nlp / 1008) * 100, 4)
         drc = round((nlc / 1008) * 100, 4)
 
-        # self.logger.debug(f'Fase alvo: {column_index}')
-        # self.logger.debug(f'DRP: {drp}%')
-        # self.logger.debug(f'DRC: {drc}%')
-
         if drp <= self.drp_limit:
             k1 = 0
         else:
             k1 = 3
 
-        if drc < self.drc_limit:
+        if drc <= self.drc_limit:
             k2 = 0
         elif (drc > self.drc_limit) and (self.voltage_nominal < 2.3 * 10 ** 3):
             k2 = 7
@@ -82,9 +78,16 @@ class DrpDrc:
         else:
             k2 = 3
 
-        comp = abs(((((drp - self.drp_limit)/100) * k1) + (((drc - self.drc_limit)/100) * k2)) * self.eusd)
+        comp = ((((drp - self.drp_limit)/100) * k1) + (((drc - self.drc_limit)/100) * k2)) * self.eusd
 
         # self.logger.debug(f'Compensação: R${round(comp,2)}')
 
         return drp, drc, comp
 
+
+if __name__ == '__main__':
+    ckt_drpdrc = DrpDrc()
+
+    drp, drc, comp = ckt_drpdrc.calculate_from_csv(Path('../dss/CA746/REDE1_Mon_carga26_pv_ve_percentage_100_voltvar_off_1.csv').resolve(), 'V1')
+
+    print(f'DRP: {drp}, DRC: {drc}, compensação: {comp}')
