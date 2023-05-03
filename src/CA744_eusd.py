@@ -15,9 +15,10 @@ if __name__ == '__main__':
     dss.Basic.DataPath(folder)
 
     dss.Text.Command('Redirect {}'.format(target_file))
-    print(dss.Loads.AllNames())
 
     all_residential_loads = dss.Loads.AllNames()[23:49]
+
+    loads_infos = dict()
 
     dss.Loads.First()
     residential_loads_kw = []
@@ -25,25 +26,31 @@ if __name__ == '__main__':
     while True:
         load = dss.Loads.Name()
         if load in all_residential_loads:
+            loads_infos[load] = dict()
+            loads_infos[load]['kw'] = dss.Loads.kW()
+            loads_infos[load]['load_shape'] = dss.Loads.Daily()
+
+            while True:
+                load_shape = dss.LoadShape.Name()
+                if load_shape == loads_infos[load]['load_shape']:
+                    loads_infos[load]['PMult'] = dss.LoadShape.PMult()
+                    break
+
+                if not dss.LoadShape.Next() > 0:
+                    break
             residential_loads_kw.append(dss.Loads.kW())
             daily_shapes.append(dss.Loads.Daily())
 
         if not dss.Loads.Next() > 0:
             break
 
-    print(daily_shapes)
-    dss.LoadShape.First()
-    dss.LoadShape.Next()
-    a = dss.LoadShape.PMult()
-
     eusd = []
 
-    for kw in residential_loads_kw:
+    for load in list(loads_infos.keys()):
         eusd_component = 0
-        with open('dados2.csv', 'r') as file:
-            reader = csv.reader(file)
-            for row in reader:
-                eusd_component = eusd_component + (float(row[0]) * kw) / 60
+
+        for element in loads_infos[load]['PMult']:
+            eusd_component = eusd_component + (element * loads_infos[load]['kw']) / 60
 
         eusd.append(eusd_component * 30 * 0.275)
 
@@ -52,5 +59,3 @@ if __name__ == '__main__':
         writer = csv.writer(file)
         for row in eusd_data_list:
             writer.writerow(row)
-
-
