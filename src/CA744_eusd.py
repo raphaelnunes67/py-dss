@@ -9,14 +9,14 @@ if __name__ == '__main__':
 
     logger.debug('OpenDSSDirect.py version: {}'.format(dss.__version__))
     logger.debug('Engine information: {}'.format(dss.Basic.Version()))
-    target_file = files.get_target_file_path(folder='CA746', file='ca746.dss')
+    target_file = files.get_target_file_path(folder='CA744', file='ca744.dss')
     folder = files.get_target_folder_path()
 
     dss.Basic.DataPath(folder)
 
     dss.Text.Command('Redirect {}'.format(target_file))
 
-    all_residential_loads = dss.Loads.AllNames()[23:49]
+    all_residential_loads = dss.Loads.AllNames()[17:48]
 
     loads_infos = dict()
 
@@ -30,6 +30,7 @@ if __name__ == '__main__':
             loads_infos[load]['kw'] = dss.Loads.kW()
             loads_infos[load]['load_shape'] = dss.Loads.Daily()
 
+            dss.LoadShape.First()
             while True:
                 load_shape = dss.LoadShape.Name()
                 if load_shape == loads_infos[load]['load_shape']:
@@ -44,6 +45,7 @@ if __name__ == '__main__':
         if not dss.Loads.Next() > 0:
             break
 
+    logger.debug('Loads infos: {}'.format(loads_infos))
     eusd = []
 
     for load in list(loads_infos.keys()):

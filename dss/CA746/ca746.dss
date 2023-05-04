@@ -439,5 +439,4 @@ new load.cargagr  phases=3 bus1=CA746GR     kv=0.220  kw=0.500   pf=0.92 model=1
 
 !export monitors carga1
 !export monitors carga14
-!export monitors carga17
 !export monitors carga26

@@ -30,8 +30,9 @@ if __name__ == '__main__':
             loads_infos[load] = dict()
             loads_infos[load]['kw'] = dss.Loads.kW()
             loads_infos[load]['load_shape'] = dss.Loads.Daily()
-
+            dss.LoadShape.First()
             while True:
+
                 load_shape = dss.LoadShape.Name()
                 if load_shape == loads_infos[load]['load_shape']:
                     loads_infos[load]['PMult'] = dss.LoadShape.PMult()
@@ -45,6 +46,7 @@ if __name__ == '__main__':
         if not dss.Loads.Next() > 0:
             break
 
+    logger.debug('Loads infos: {}'.format(loads_infos))
     eusd = []
 
     for load in list(loads_infos.keys()):
