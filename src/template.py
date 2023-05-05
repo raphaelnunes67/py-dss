@@ -1,6 +1,7 @@
 import opendssdirect as dss
 from tools import *
 from plotter import Plotter
+from ast import literal_eval
 
 
 def get_all_loads() -> list:
@@ -50,6 +51,23 @@ def get_load_by_name(name: str) -> dict:
     return load
 
 
+def set_load_property_by_name(name: str, property: str, value: Union[int, list]) -> bool:
+    methods = [method for method in dir(dss.Loads) if callable(getattr(dss.Loads, method))]
+    dss.Loads.First()
+    result = False
+    while True:
+        if dss.Loads.Name() == name:
+            if property in methods:
+                eval(f'dss.Loads.{property}({value})')
+                result = True
+            break
+
+        if not dss.Loads.Next() > 0:
+            break
+
+    return result
+
+
 def get_all_load_shapes() -> list:
     loads_shapes_list = []
     dss.LoadShape.First()
@@ -96,6 +114,23 @@ def get_load_shape_by_name(name: str) -> dict:
     return load_shape
 
 
+def set_load_shape_property_by_name(name: str, property: str, value: Union[int, list]) -> bool:
+    methods = [method for method in dir(dss.LoadShape) if callable(getattr(dss.LoadShape, method))]
+    dss.LoadShape.First()
+    result = False
+    while True:
+        if dss.LoadShape.Name() == name:
+            if property in methods:
+                eval(f'dss.Loads.{property}({value})')
+                result = True
+            break
+
+        if not dss.LoadShape.Next() > 0:
+            break
+
+    return result
+
+
 if __name__ == '__main__':
     log = Log()
     logger = log.set_logger_stdout('template_debug')
@@ -112,6 +147,7 @@ if __name__ == '__main__':
     logger.debug(dss.Circuit.AllBusNames())
 
     loads = get_all_loads()
+    set_load_property_by_name(name='634a', property='kV', value=125)
     load = get_load_by_name('634a')
 
     loads_shapes = get_all_load_shapes()
