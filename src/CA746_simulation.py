@@ -106,12 +106,12 @@ def execute_ckt_case_study(logger, target_file: str) -> None:
 
 def create_results_folder() -> None:
     for word in ('_20', '_40', '_60', '_80', '_100'):
-        if not os.path.exists(Path(f'../../results/CA744_results/voltvar_off/pv_ev{word}').resolve()):
-            os.makedirs(Path(f'../../results/CA744_results/voltvar_off/pv_ev{word}').resolve())
+        if not os.path.exists(Path(f'../../results/CA746_results/voltvar_off/pv_ev{word}').resolve()):
+            os.makedirs(Path(f'../../results/CA746_results/voltvar_off/pv_ev{word}').resolve())
 
     for word in ('_20', '_40', '_60', '_80', '_100'):
-        if not os.path.exists(Path(f'../../results/CA744_results/voltvar_on/pv_ev{word}').resolve()):
-            os.makedirs(Path(f'../../results/CA744_results/voltvar_on/pv_ev{word}').resolve())
+        if not os.path.exists(Path(f'../../results/CA746_results/voltvar_on/pv_ev{word}').resolve()):
+            os.makedirs(Path(f'../../results/CA746_results/voltvar_on/pv_ev{word}').resolve())
 
 
 def move_files_results(_folder: str) -> None:
@@ -119,7 +119,7 @@ def move_files_results(_folder: str) -> None:
 
     for file in _files:
         source = Path(_folder + '/' + file).resolve()
-        destination = '../../results/CA744_results'
+        destination = '../../results/CA746_results'
         if file.find('.csv') != -1 and file.find('REDE1_Mon_') != - 1:
             if file.find('voltvar_off') != -1:
                 destination = destination + '/voltvar_off'
@@ -136,13 +136,13 @@ def move_files_results(_folder: str) -> None:
                         shutil.copy(source, destination)
 
     shutil.copy(Path(_folder + '/losses_voltvar_OFF.csv').resolve(),
-                Path('../../results/CA744_results/').resolve())
+                Path('../../results/CA746_results/').resolve())
 
     shutil.copy(Path(_folder + '/losses_voltvar_ON.csv').resolve(),
-                Path('../../results/CA744_results/').resolve())
+                Path('../../results/CA746_results/').resolve())
 
     shutil.copy(Path(_folder + '/eusd_loads.csv').resolve(),
-                Path('../../results/CA744_results/').resolve())
+                Path('../../results/CA746_results/').resolve())
 
 
 if __name__ == '__main__':
@@ -168,12 +168,12 @@ if __name__ == '__main__':
     #
     #     sleep(5)
     #
-    #     calculate_drp_drc_for_each_load('../../results/CA744_results/voltvar_on')
-    #     calculate_drp_drc_for_each_load('../../results/CA744_results/voltvar_off')
+    #     calculate_drp_drc_for_each_load('../../results/CA746_results/voltvar_on')
+    #     calculate_drp_drc_for_each_load('../../results/CA746_results/voltvar_off')
     #
-    #     calculate_comp_total('../../results/CA744_results/')
+    #     calculate_comp_total('../../results/CA746_results/')
     #
-    #     workbook = openpyxl.load_workbook(Path('../../results/CA744_results/comp_total.xlsx').resolve())
+    #     workbook = openpyxl.load_workbook(Path('../../results/CA746_results/comp_total.xlsx').resolve())
     #     worksheet = workbook['voltvar_off']
     #     celula = worksheet.cell(row=2, column=5)
     #     value = celula.value

@@ -102,7 +102,7 @@ def calculate_comp_total(ckt_results_folder):
 
 
 if __name__ == '__main__':
-    calculate_drp_drc_for_each_load('../results/CA744_results/voltvar_on')
-    calculate_drp_drc_for_each_load('../results/CA744_results/voltvar_off')
+    calculate_drp_drc_for_each_load('../results/CA746_results/voltvar_on')
+    calculate_drp_drc_for_each_load('../results/CA746_results/voltvar_off')
 
-    calculate_comp_total('../results/CA744_results/')
+    calculate_comp_total('../results/CA746_results/')
