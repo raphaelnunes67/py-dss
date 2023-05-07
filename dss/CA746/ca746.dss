@@ -2,12 +2,13 @@ Clear
 
 !----------Barramento de Entrada do Circuito--------
 
-New circuit.REDE1 
+new circuit.REDE1
+
+set maxcontroliter=100000
+
 !~ basekv=13.8 Bus1=MT1 pu=1.03 Phases=3 R1=3.63068244 X1=6.87396402 R0=4.2641 X0=11.7544
 
 ~ basekv=13.8 Bus1=MT1 pu=1.015 Phases=3 MVAsc1=600e10 MVAsc3=600e10
-
-set maxcontroliter=100000
 
 
 !------------------Curvas de Carga-----------------
@@ -29,7 +30,7 @@ new loadshape.demand3 npts=1440 minterval=1 csvfile=dados2.csv action=normalize 
 !new Loadshape.shapev1   npts=1440 minterval=1
 !~ mult=(file=ev_shapes.csv, col=1)
 
-!-------------------- Curva VoltVar --------------------------------
+!-------------------- Voltvar Curve --------------------------------
 
 new Xycurve.vv_curve npts=6 Xarray=[0.5 0.88 0.99 1.01 1.1 1.5] Yarray=[1 1 0 0 -1 -1]
 

@@ -147,7 +147,7 @@ def move_files_results(_folder: str) -> None:
 
 if __name__ == '__main__':
     log = Log()
-    logger = log.set_logger_stdout('script01')
+    logger = log.set_logger_stdout('CA746_simulation')
     files = HandleFiles()
 
     logger.debug('OpenDSSDirect.py version: {}'.format(dss.__version__))

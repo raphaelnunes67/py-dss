@@ -55,6 +55,7 @@ def calculate_drp_drc_for_each_load(voltvar_folder_path):
 def calculate_comp_total(ckt_results_folder):
     for voltvar_mode_folder in ('voltvar_off', 'voltvar_on'):
         sheet_content_default = {
+            '0%': [],
             '20%': [],
             '40%': [],
             '60%': [],
@@ -65,6 +66,9 @@ def calculate_comp_total(ckt_results_folder):
         folders = os.listdir(Path(ckt_results_folder + voltvar_mode_folder).resolve())
         sheet_content = sheet_content_default.copy()
 
+        if voltvar_mode_folder == 'voltvar_on':
+            sheet_content['0%'] = ['-']
+
         for folder in folders:
             comp_total = 0
             files = os.listdir(Path(ckt_results_folder + voltvar_mode_folder + '/' + str(folder)).resolve())
@@ -74,7 +78,10 @@ def calculate_comp_total(ckt_results_folder):
                         Path(ckt_results_folder + voltvar_mode_folder + '/' + str(folder) + '/' + str(file)).resolve())
                     comp_total = comp_total + df['COMP_TOTAL(R$)'][0]
 
-            if str(folder).find('20') != -1:
+            if str(folder).find('_0') != -1:
+                sheet_content['0%'] = [comp_total]
+
+            elif str(folder).find('20') != -1:
                 sheet_content['20%'] = [comp_total]
 
             elif str(folder).find('40') != -1:

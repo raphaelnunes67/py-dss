@@ -1,8 +1,6 @@
 import opendssdirect as dss
 from tools import *
 from plotter import Plotter
-from ast import literal_eval
-
 
 def get_all_loads() -> list:
     loads_list = []
@@ -131,6 +129,11 @@ def set_load_shape_property_by_name(name: str, property: str, value: Union[int, 
     return result
 
 
+def get_all_buses() -> list:
+
+    return dss.Circuit.AllBusNames()
+
+
 if __name__ == '__main__':
     log = Log()
     logger = log.set_logger_stdout('template_debug')
@@ -144,8 +147,6 @@ if __name__ == '__main__':
     dss.Basic.DataPath(folder)
     dss.Text.Command('Redirect {}'.format(target_file))
 
-    logger.debug(dss.Circuit.AllBusNames())
-
     loads = get_all_loads()
     set_load_property_by_name(name='634a', property='kV', value=125)
     load = get_load_by_name('634a')
@@ -153,11 +154,15 @@ if __name__ == '__main__':
     loads_shapes = get_all_load_shapes()
     load_shape = get_load_shape_by_name('default')
 
+    buses = get_all_buses()
+
     logger.debug(f'All loads: {loads}')
     logger.debug(f'Specific load: {load}')
 
     logger.debug(f'All load shapes: {loads_shapes}')
     logger.debug(f'Specific load shape: {load_shape}')
+
+    logger.debug(f'All bus names: {buses}')
 
     dss.Solution.Solve()
 

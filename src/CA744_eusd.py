@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     dss.Text.Command('Redirect {}'.format(target_file))
 
-    all_residential_loads = dss.Loads.AllNames()[17:48]
+    all_residential_loads = dss.Loads.AllNames()[17:64]
 
     loads_infos = dict()
 
