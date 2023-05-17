@@ -37,7 +37,7 @@ new LoadShape.IP npts=96 minterval=15 csvfile=curvas/IP.txt action = normalize
 new Xycurve.vv_curve npts=6 Xarray=[0.5 0.88 0.99 1.01 1.1 1.5] Yarray=[1 1 0 0 -1 -1]
 
 
-!------------------Shape do gerador FV e cargas resid�ncias -----------------
+!------------------ PV Generator Shapes -----------------
 
 new loadshape.PVshape1 npts=1440 minterval=1 csvfile=pvperfis/pv_chuva.txt 
 new loadshape.PVshape2 npts=1440 minterval=1 csvfile=pvperfis/pv_nubla.txt 
@@ -160,7 +160,7 @@ new line.1743016 	Geometry=QUAD-50 Length=0.028512 Units=km Bus1=C110660628 Bus2
 
 
 
-!--------------Transformadores Trif�sicos--------------
+!--------------Tri-phase transformers --------------
 
 
 new transformer.HB873 phases=3 Windings=2 XHL=3.5 %loadloss=1.556 %noloadloss=0.3233
@@ -183,14 +183,14 @@ new load.IP6   phases=1 bus1=C112935277.3.1 kv=0.22 kw=0.275  	pf=0.92 conn=delt
 !Residential Load
 
 
-new load.carga1   phases=3 bus1=HB873RES1   kV=0.220  kW=1.8743   		pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2    	! RES - Tipo2
+new load.carga1   phases=3 bus1=HB873RES1   kV=0.220  kW=2.8743   		pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2    	! RES - Tipo2
 new load.carga2   phases=3 bus1=HB873RES2   kV=0.220  kW=3.01354167     pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2	    ! RES - Tipo2
 new load.carga3   phases=3 bus1=HB873RES3   kV=0.220  kW=3.58154762     pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2	    ! RES - Tipo2
 new load.carga4   phases=3 bus1=HB873RES4   kV=0.220  kW=2.3457    		pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2	    ! RES - Tipo2
 new load.carga5   phases=3 bus1=HB873RES5   kV=0.220  kW=2.7827381      pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2      	! RES - Tipo2
-new load.carga6   phases=3 bus1=HB873RES6   kV=0.220  kW=1.19002976     pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2     	! RES - Tipo2
-new load.carga7   phases=3 bus1=HB873RES7   kV=0.220  kW=0.58764881  	pf=0.92 model=1 conn=wye status=variable daily=COM-Tipo3 		! COM - Tipo3
-new load.carga8   phases=3 bus1=HB873RES8   kV=0.220  kW=0.81354167		pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2		! RES - Tipo2
+new load.carga6   phases=3 bus1=HB873RES6   kV=0.220  kW=2.19002976     pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2     	! RES - Tipo2
+new load.carga7   phases=3 bus1=HB873RES7   kV=0.220  kW=2.58764881  	pf=0.92 model=1 conn=wye status=variable daily=COM-Tipo3 		! COM - Tipo3
+new load.carga8   phases=3 bus1=HB873RES8   kV=0.220  kW=3.81354167		pf=0.92 model=1 conn=wye status=variable daily=RES-Tipo2		! RES - Tipo2
 
 
 !------------------ Measures -----------------
@@ -209,7 +209,7 @@ new load.carga8   phases=3 bus1=HB873RES8   kV=0.220  kW=0.81354167		pf=0.92 mod
 
 !solve
 
-!------------- Plots----------------------------
+!------------- Plots ----------------------------
 
 !export monitors carga1
 !plot monitor object=carga1 channels=(1 3 5) bases = [127 127 127]
