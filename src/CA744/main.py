@@ -30,3 +30,4 @@ if __name__ == '__main__':
     CA744Prodist().calculate_drp_drc_for_each_load('./results/voltvar_off')
     CA744Prodist().calculate_drp_drc_for_each_load('./results/voltvar_on')
     CA744Prodist().calculate_comp_total('./results/')
+    logger.debug('Operation finished')

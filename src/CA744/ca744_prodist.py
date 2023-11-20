@@ -2,7 +2,6 @@ import os
 import pandas as pd
 from pathlib import Path
 from prodist.drpdrc import DrpDrc
-from prodist.drpdrc import DrpDrc
 
 
 class CA744Prodist:
