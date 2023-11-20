@@ -161,7 +161,7 @@ cython_debug/
 
 # OpenDSS results files
 
-/results
+**/results/
 
 #editor
 

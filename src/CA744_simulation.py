@@ -8,8 +8,8 @@ from tools import *
 
 from CA744_drpdcr import *
 
-def execute_ckt_case_study(logger, target_file: str) -> None:
 
+def execute_ckt_case_study(logger, target_file: str) -> None:
     target_loads_list = random.sample(range(1, 47), 46)  # list with random load's numbers
     ev_shapes = random.sample(list(range(1, 5000)), 46)  # select randomly a specific shape
     # battery_shapes = ev_shapes
@@ -74,7 +74,7 @@ def execute_ckt_case_study(logger, target_file: str) -> None:
                                  f'element=load.carga{i} terminal=1 mode=1 ppolar=no')
 
             dss.Text.Command(f'new energymeter.busbar_PV_VE_percentage_{percentage}_voltvar_{voltvar} '
-                             f'element=transformer.CA744 terminal=1')
+                             f'element=transformer.ca744 terminal=1')
 
             dss.Text.Command('set voltagebases=[13.8 0.220]')
             dss.Text.Command('calcvoltagebases')
@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
     logger.debug('OpenDSSDirect.py version: {}'.format(dss.__version__))
     logger.debug('Engine information: {}'.format(dss.Basic.Version()))
-    target_file = files.get_target_file_path(folder='CA744', file='ca744.dss')
+    target_file = files.get_target_file_path(folder='ca744', file='ca744.dss')
     folder = files.get_target_folder_path()
 
     dss.Basic.DataPath(folder)

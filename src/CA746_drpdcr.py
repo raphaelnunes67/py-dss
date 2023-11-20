@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from drpdrc import DrpDrc
+from src.prodist.drpdrc import DrpDrc
 from pathlib import Path
 
 
@@ -30,7 +30,7 @@ def calculate_drp_drc_for_each_load(voltvar_folder_path):
                 sheet_content = sheet_content_default.copy()
                 eusd = eusd_data_list[i]
                 ckt_drp_drc = DrpDrc(eusd=eusd)
-                drp, drc, comp = ckt_drp_drc.calculate_from_csv(Path(folder_path + '/' + str(file)).resolve(), phases)
+                drp, drc, comp = ckt_drp_drc.calculate_from_csv(folder_path + '/' + str(file), phases)
                 sheet_content[f'DRP(%)'] = [drp]
                 sheet_content[f'DRC(%)'] = [drc]
                 sheet_content[f'COMP(R$)'] = [comp]

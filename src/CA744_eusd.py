@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     logger.debug('OpenDSSDirect.py version: {}'.format(dss.__version__))
     logger.debug('Engine information: {}'.format(dss.Basic.Version()))
-    target_file = files.get_target_file_path(folder='CA744', file='ca744.dss')
+    target_file = files.get_target_file_path(folder='ca744', file='ca744.dss')
     folder = files.get_target_folder_path()
 
     dss.Basic.DataPath(folder)

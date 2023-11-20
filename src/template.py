@@ -1,6 +1,7 @@
 import opendssdirect as dss
 from tools import *
-from plotter import Plotter
+from plotter.plotter import Plotter
+
 
 def get_all_loads() -> list:
     loads_list = []
@@ -130,7 +131,6 @@ def set_load_shape_property_by_name(name: str, property: str, value: Union[int, 
 
 
 def get_all_buses() -> list:
-
     return dss.Circuit.AllBusNames()
 
 

@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from drpdrc import DrpDrc
+from src.prodist.drpdrc import DrpDrc
 from pathlib import Path
 
 
