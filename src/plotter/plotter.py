@@ -6,6 +6,8 @@ from pathlib import Path
 
 class Plotter:
     def __init__(self):
+        self.target_file_path_folder = None
+        self.target_file_path = None
         self.plt = plt
         self.title = ''
         self.target_file = None
@@ -18,7 +20,7 @@ class Plotter:
 
     def set_file(self, file: str):
         self.target_file_path = Path(file)
-        self.target_file_path_folder =str(Path(str(self.target_file_path) + '/../'))
+        self.target_file_path_folder = str(Path(str(self.target_file_path) + '/../'))
         self.target_file = pd.read_csv(Path(file))
 
     def handle_csv_time(self):

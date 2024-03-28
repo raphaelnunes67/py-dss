@@ -83,7 +83,8 @@ class CA744Prodist:
 
                 elif str(folder).find('80') != -1:
                     sheet_content['80%'] = [comp_total]
-                else:
+
+                elif str(folder).find('100') != -1:
                     sheet_content['100%'] = [comp_total]
 
             df = pd.DataFrame(sheet_content)

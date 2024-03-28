@@ -92,7 +92,7 @@ class CA744Simulation:
 
         first_write: bool = True
         self.logger.debug('---- Starting Simulation LOOP ----')
-        # dss.Basic.DataPath('./')
+        dss.Basic.DataPath('./')
 
         for voltvar in ('OFF', 'ON'):
             for percentage in self.percentages_list:
@@ -126,9 +126,15 @@ class CA744Simulation:
 
                         if voltvar == 'ON':
                             if not voltvar_defined:
-                                dss.Text.Command('new Invcontrol.Inv1 Mode=VOLTVAR voltage_curvex_ref=rated'
-                                                 ' vvc_curve1=vv_curve DeltaQ_factor=0.1  voltagechangetolerance=0.1'
-                                                 ' varchangetolerance=0.1')
+                                # dss.Text.Command('new Invcontrol.Inv1 Mode=VOLTVAR voltage_curvex_ref=rated'
+                                #                  ' vvc_curve1=vv_curve DeltaQ_factor=0.1  voltagechangetolerance=0.1'
+                                #                  ' varchangetolerance=0.1')
+                                # voltvar_defined = True
+
+                                dss.Text.Command('new InvControl.InvPVCtrl Mode=VOLTWATT voltwatt_curve=VoltWatt_curve voltage_curvex_ref=rated '
+                                'VoltwattYaxis=PMPPU VarChangeTolerance=0.0002 VoltageChangeTolerance=0.1 deltaP_factor=-1 '
+                                'EventLog=yes')
+
                                 voltvar_defined = True
                 for i in range(1, 47):
                     dss.Text.Command(f'new monitor.carga{i}_PV_VE_percentage_{percentage}_voltvar_{voltvar}_voltage '
@@ -144,7 +150,6 @@ class CA744Simulation:
                 dss.Text.Command('set mode=daily')
                 dss.Text.Command('set stepsize=1m')
                 dss.Text.Command('set number=1440')
-                # dss.Text.Command('batchedit load..* vminpu=0.3')
                 dss.Solution.Solve()
 
                 data = [[percentage, dss.Meters.RegisterValues()[12]]]

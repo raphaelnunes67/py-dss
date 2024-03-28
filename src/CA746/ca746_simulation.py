@@ -92,7 +92,7 @@ class CA746Simulation:
 
         first_write: bool = True
         self.logger.debug('---- Starting Simulation LOOP ----')
-        # dss.Basic.DataPath('./')
+        dss.Basic.DataPath('./')
 
         for voltvar in ('OFF', 'ON'):
             for percentage in self.percentages_list:
@@ -144,7 +144,6 @@ class CA746Simulation:
                 dss.Text.Command('set mode=daily')
                 dss.Text.Command('set stepsize=1m')
                 dss.Text.Command('set number=1440')
-                # dss.Text.Command('batchedit load..* vminpu=0.3')
                 dss.Solution.Solve()
 
                 data = [[percentage, dss.Meters.RegisterValues()[12]]]
